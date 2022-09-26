@@ -1,0 +1,103 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(11)
+
+group 'net.covers1624'
+version '0.1.0'
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    java11CompileOnly.extendsFrom compileOnly
+}
+
+sourceSets {
+    java11
+    main
+}
+
+dependencies {
+    implementation 'com.google.code.gson:gson:2.9.1'
+
+    implementation 'org.apache.httpcomponents:httpcore:4.3.2'
+    implementation 'org.apache.httpcomponents:httpclient:4.3.3'
+
+    java11Implementation sourceSets.main.output
+
+    compileOnly 'org.jetbrains:annotations:23.0.0'
+    compileOnly 'com.google.code.findbugs:jsr305:3.0.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+compileJava {
+    options.release = 8
+}
+
+compileJava11Java {
+    options.release = 11
+}
+
+jar {
+    dependsOn compileJava11Java
+    from sourceSets.java11.output
+}
+
+publishing {
+    repositories {
+        if (System.getenv('MAVEN_PASS')) {
+            maven {
+                url "https://nexus.covers1624.net/repository/maven-releases/"
+                credentials {
+                    username 'covers1624'
+                    password System.getenv('MAVEN_PASS')
+                }
+            }
+        }
+    }
+    publications {
+        publication(MavenPublication) {
+            groupId project.group
+            artifactId project.archivesBaseName
+            version project.version
+            //Don't publish a Component, as we don't want to export our dependencies.
+            artifact jar
+
+            pom {
+                name = archivesBaseName
+                description = archivesBaseName
+                url = "https://github.com/covers1624/${archivesBaseName}"
+                scm {
+                    url = "https://github.com/covers1624/${archivesBaseName}"
+                    connection = "scm:git:git://github.com/covers1624/${archivesBaseName}.git"
+                    connection = "scm:git:git@github.com:covers1624/${archivesBaseName}.git"
+                }
+
+                issueManagement {
+                    system = 'github'
+                    url = "https://github.com/covers1624/${archivesBaseName}/issues"
+                }
+                licenses {
+                    license {
+                        name = "MIT"
+                        url = "https://raw.githubusercontent.com/covers1624/${archivesBaseName}/master/LICENSE.txt"
+                        distribution = 'repo'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'covers1624'
+                        name = 'covers1624'
+                    }
+                }
+            }
+        }
+    }
+}

@@ -73,6 +73,7 @@ public class DevLogin {
         } else {
             System.out.println("[DevLogin] Validating profile: " + profile);
             MicrosoftOAuth.validateAccount(engine, account);
+            saveAccounts(accountMap);
         }
 
         engine.shutdown();

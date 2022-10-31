@@ -39,6 +39,7 @@ It will perform the login/validation flow and append the required launch argumen
 
 DevLogin stores certain tokens and private data in `~/.devlogin/` in plain text. This is to
 facilitate using the same login accounts, and tokens across multiple dev environments, etc.
+This location can be changed via the `devlogin.storage` system property.
 
 The specific data stored in this folder is:
 

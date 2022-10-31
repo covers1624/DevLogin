@@ -7,7 +7,7 @@ Supports Java 8 and above. 1.12 and above are supported. (Older likely works)
 
 ### Usage and Installation
 
-- Install // TODO Links to install guides.
+- [Install](https://github.com/covers1624/DevLogin/wiki).
 - Start the game.
 - You will see a prompt in the console with similar text to the following `To sign in, use a web browser to open the page https://www.microsoft.com/link and enter the code <code> to authenticate.`
 - Proceed to https://www.microsoft.com/link enter the code and login to the Microsoft account. Your account must own a valid copy of Minecraft.

@@ -8,6 +8,9 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(11)
 group 'net.covers1624'
 version '0.1.0'
 
+version = "$version." + (System.getenv("BUILD_NUMBER") ?: "1")
+println "Starting build of ${archivesBaseName}, Version: ${version}"
+
 repositories {
     mavenCentral()
 }

@@ -59,4 +59,4 @@ DevLogin appends the following program arguments before handing off to the launc
 - `--username <minecraft account username>`
 - `--userType msa`
 
-Builds can be found on maven [here](https://maven.covers1624.net/net/covers1624/DevLogin).
+Builds can be found on maven [here](https://nexus.covers1624.net/#browse/browse:maven-hosted:net%2Fcovers1624%2FDevLogin).

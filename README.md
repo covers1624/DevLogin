@@ -16,14 +16,14 @@ Supports Java 8 and above. 1.12 and above are supported. (Older likely works)
 
 ### Multiple accounts
 
-Switching between multiple Minecraft accounts is supported via the `--launch_profile` command line argument.
+Switching between multiple Minecraft accounts is supported via the `--launch_profile` program arg. (or use the `devlogin.launch_profile` system property)
 With this argument omitted, the `default` profile will be used.
 
 ### Manual usage
 
 - Add DevLogin jar to runtime classpath.
 - Set 'Main Class' to `net.covers1624.devlogin.DevLogin`
-- Add program argument `--launch_target <original main class>`
+- Add program argument `--launch_target <original main class>` (or use the `devlogin.launch_target` system property)
 
 ### Dependencies
 

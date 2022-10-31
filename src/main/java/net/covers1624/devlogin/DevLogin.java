@@ -37,10 +37,10 @@ public class DevLogin {
     public static void main(String[] args) throws Throwable {
         List<String> newArgs = new LinkedList<>();
         Map<String, String> ourArgs = consumeArgs(args, newArgs, "--launch_profile", "--launch_target");
-        String profile = ourArgs.getOrDefault("--launch_profile", "default");
-        String launchTarget = ourArgs.get("--launch_target");
+        String profile = ourArgs.getOrDefault("--launch_profile", System.getProperty("devlogin.launch_profile", "default"));
+        String launchTarget = ourArgs.getOrDefault("--launch_target", System.getProperty("devlogin.launch_target"));
         if (launchTarget == null) {
-            System.err.println("Expected '--launch_target' option to be set.");
+            System.err.println("Expected '--launch_target' arg or 'devlogin.launch_target' System property to be set.");
             System.exit(1);
         }
         Class<?> targetClass = Class.forName(launchTarget);

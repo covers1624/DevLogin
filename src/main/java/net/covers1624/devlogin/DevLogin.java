@@ -36,15 +36,14 @@ public class DevLogin {
 
     public static void main(String[] args) throws Throwable {
         List<String> newArgs = new LinkedList<>();
+        boolean justDumpToConsole = Boolean.getBoolean("devlogin.yes_i_really_just_want_to_dump_to_console");
         Map<String, String> ourArgs = consumeArgs(args, newArgs, "--launch_profile", "--launch_target");
         String profile = ourArgs.getOrDefault("--launch_profile", System.getProperty("devlogin.launch_profile", "default"));
         String launchTarget = ourArgs.getOrDefault("--launch_target", System.getProperty("devlogin.launch_target"));
-        if (launchTarget == null) {
+        if (launchTarget == null && !justDumpToConsole) {
             System.err.println("Expected '--launch_target' arg or 'devlogin.launch_target' System property to be set.");
             System.exit(1);
         }
-        Class<?> targetClass = Class.forName(launchTarget);
-        Method mainMethod = targetClass.getMethod("main", String[].class);
 
         boolean badArgs = false;
         String[] disallowedArgs = { "--accessToken", "--username", "--uuid", "--userType" };
@@ -78,14 +77,26 @@ public class DevLogin {
 
         engine.shutdown();
 
-        newArgs.add("--accessToken");
-        newArgs.add(account.mcTokens.accessToken);
-        newArgs.add("--uuid");
-        newArgs.add(account.uuid.toString().replace("-", ""));
-        newArgs.add("--username");
-        newArgs.add(account.username);
-        newArgs.add("--userType");
-        newArgs.add("msa");
+        List<String> loginArgs = new ArrayList<>(8);
+        loginArgs.add("--accessToken");
+        loginArgs.add(account.mcTokens.accessToken);
+        loginArgs.add("--uuid");
+        loginArgs.add(account.uuid.toString().replace("-", ""));
+        loginArgs.add("--username");
+        loginArgs.add(account.username);
+        loginArgs.add("--userType");
+        loginArgs.add("msa");
+
+        if (justDumpToConsole) {
+            System.out.println("[DevLogin] Here are your launch arguments! Keep them private!");
+            System.out.println(String.join(" ", loginArgs));
+            System.exit(0);
+        }
+
+        Class<?> targetClass = Class.forName(launchTarget);
+        Method mainMethod = targetClass.getMethod("main", String[].class);
+
+        newArgs.addAll(loginArgs);
 
         mainMethod.invoke(null, (Object) newArgs.toArray(new String[0]));
     }

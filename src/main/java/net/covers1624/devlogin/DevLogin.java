@@ -62,16 +62,24 @@ public class DevLogin {
 
         HttpEngine engine = HttpEngine.selectEngine();
 
+        if (account != null) {
+            System.out.println("[DevLogin] Validating profile: " + profile);
+            try {
+                MicrosoftOAuth.validateAccount(engine, account);
+                saveAccounts(accountMap);
+            } catch (MicrosoftOAuth.GrantExpiredException ex) {
+                System.out.println("[DevLogin] Account grant expired. Must login again.");
+                account = null;
+                accountMap.remove(profile);
+                saveAccounts(accountMap);
+            }
+        }
         if (account == null) {
             // New account!
             System.out.println("[DevLogin] Adding new profile: " + profile);
             AuthenticationResponse msAuth = MicrosoftOAuth.deviceAuth(engine);
             account = MicrosoftOAuth.loginToAccount(engine, msAuth);
             accountMap.put(profile, account);
-            saveAccounts(accountMap);
-        } else {
-            System.out.println("[DevLogin] Validating profile: " + profile);
-            MicrosoftOAuth.validateAccount(engine, account);
             saveAccounts(accountMap);
         }
 

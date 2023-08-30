@@ -8,8 +8,8 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 
 import static java.util.Collections.singletonList;
+import static net.covers1624.devlogin.DevLogin.GSON;
 import static net.covers1624.devlogin.util.ColUtils.mapOf;
-import static net.covers1624.devlogin.DevLogin.*;
 
 /**
  * Created by covers1624 on 12/9/22.
@@ -96,6 +96,9 @@ public class MicrosoftOAuth {
 
         if (resp.code != 200) {
             MicrosoftApiError error = resp.fromJson(GSON, MicrosoftApiError.class);
+            if (error.error.equals("invalid_grant")) {
+                throw new GrantExpiredException(error);
+            }
             throw new RuntimeException("Failed to refresh Microsoft Token: " + error.errorDescription);
         }
 
@@ -245,4 +248,14 @@ public class MicrosoftOAuth {
         return resp.fromJson(GSON, MinecraftProfile.class);
     }
     // endregion
+
+    public static class GrantExpiredException extends RuntimeException {
+
+        public final MicrosoftApiError error;
+
+        public GrantExpiredException(MicrosoftApiError error) {
+            super(error.errorDescription);
+            this.error = error;
+        }
+    }
 }

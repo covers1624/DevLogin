@@ -45,16 +45,14 @@ public class DevLogin {
             System.exit(1);
         }
 
-        boolean badArgs = false;
         String[] disallowedArgs = { "--accessToken", "--username", "--uuid", "--userType" };
         for (String disallowedArg : disallowedArgs) {
-            if (newArgs.contains(disallowedArg)) {
-                System.err.println("[DevLogin] Argument '" + disallowedArg + "' must be removed.");
-                badArgs = true;
+            int i = newArgs.indexOf(disallowedArg);
+            if (i != -1) {
+                System.err.println("[DevLogin] Argument '" + disallowedArg + "' will be stripped..");
+                newArgs.remove(i);
+                newArgs.remove(i);
             }
-        }
-        if (badArgs) {
-            System.exit(1);
         }
 
         Map<String, Account> accountMap = loadAccounts();

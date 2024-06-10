@@ -142,7 +142,12 @@ public class MicrosoftOAuth {
         XBLAuthenticationResponse xblAuth = authenticateWithXBL(engine, account.msTokens.accessToken);
         XSTSAuthenticationResponse xstsAuth = authenticateWithXSTS(engine, xblAuth);
 
-        account.mcTokens = new Account.MCTokens(authenticateWithMinecraft(engine, xblAuth, xstsAuth));
+        MinecraftAuthResponse mcAuth = authenticateWithMinecraft(engine, xblAuth, xstsAuth);
+        MinecraftProfile profile = getMinecraftProfile(engine, mcAuth);
+
+        account.username = profile.name;
+        account.uuid = profile.uuid();
+        account.mcTokens = new Account.MCTokens(mcAuth);
 
         System.out.println("[DevLogin] Minecraft Token refreshed.");
     }
